@@ -5,6 +5,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,13 +15,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     EditText et_descricao;
     Button bt_ok, bt_data, bt_hora, bt_hoje, bt_outra_data;
     TextView tv_consulta;
-    String data, horas, outra_data;
+    String data, horas, outra_data, data_selecionada;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,16 @@ public class MainActivity extends AppCompatActivity {
         bt_hoje = (Button) findViewById(R.id.bt_hoje);
         bt_outra_data = (Button) findViewById(R.id.bt_outra_data);
         tv_consulta = (TextView) findViewById(R.id.tv_consulta);
+//
+//        final Calendar calendar = Calendar.getInstance();
+//        int ano = calendar.get(Calendar.YEAR);
+//        int mes = calendar.get(Calendar.MONTH);
+//        int dia = calendar.get(Calendar.DAY_OF_MONTH);
+//        data_selecionada = dia + "/" + (mes + 1) + "/" + ano;
+
+        database.openDB(this);
+        database.createTable(this);
+        database.closeDB();
 
         bt_data.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
         st_descricao = et_descricao.getText().toString();
         st_data = data;
         st_hora = horas;
-
-        Log.i("Novo Compromisso", "Nome: " + st_descricao + " - Data: " + data + " - Hora: " + st_hora);
-
+        data_selecionada = data;
+        Log.i("a", data);
+        database.addCompromisso(st_descricao,st_data, st_hora,this);
+        showCompromissos();
         bt_hora.setText("Hora");
         bt_data.setText("Data");
         et_descricao.setText(null);
@@ -128,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         String dataSelecionada = day + "/" + (month + 1) + "/" + year;
+                        data_selecionada = dataSelecionada;
                         bt_outra_data.setText(dataSelecionada);
                         outra_data = dataSelecionada;
                         tv_consulta.setText(dataSelecionada);
+                        showCompromissos();
                     }
                 }, ano, mes, dia);
         datePickerDialog.show();
@@ -142,7 +160,41 @@ public class MainActivity extends AppCompatActivity {
         int mes = calendar.get(Calendar.MONTH);
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         String dataSelecionada = dia + "/" + (mes + 1) + "/" + ano;
-        tv_consulta.setText(dataSelecionada);
+        data_selecionada = dataSelecionada;
         bt_outra_data.setText("Outra data");
+        showCompromissos();
+    }
+
+    public void showCompromissos() {
+        cursor = database.getCompromissos(this, data_selecionada);
+
+        tv_consulta.setText("");
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String data = cursor.getString(cursor.getColumnIndex("data"));
+                String dataFormatada = formatDate(data);
+                String descricao = cursor.getString(cursor.getColumnIndex("descricao"));
+                String hora = cursor.getString(cursor.getColumnIndex("hora"));
+
+                //Log.i("Novo Compromisso", dataFormatada + " " + hora + " - " + descricao);
+                tv_consulta.append(dataFormatada + " " + hora + " - " + descricao + '\n');
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+
+    private String formatDate(String data) {
+        try {
+            SimpleDateFormat sdfInput = new SimpleDateFormat("yy/MM/dd");
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("dd/MM/yy");
+            Date date = sdfInput.parse(data);
+            return sdfOutput.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
