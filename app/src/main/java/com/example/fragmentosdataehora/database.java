@@ -19,7 +19,7 @@ public class database {
     public static void openDB(Activity act){
         try{
             ContextWrapper cw= new ContextWrapper(act);
-            db = cw.openOrCreateDatabase("agenda", MODE_PRIVATE, null);
+            db = cw.openOrCreateDatabase("previsaoDoTempo", MODE_PRIVATE, null);
         } catch (Exception ex) {
             Log.i("Erro", "Abrindo o banco de dados");
         }
@@ -27,8 +27,7 @@ public class database {
 
     public static void createTable(Activity act){
         try {
-            db.execSQL("DROP TABLE compromissos;");
-            db.execSQL("CREATE TABLE IF NOT EXISTS  compromissos(id INTEGER PRIMARY KEY, descricao TEXT, data DATE, hora TIME);");
+            db.execSQL("CREATE TABLE IF NOT EXISTS  cidades(id INTEGER PRIMARY KEY, nome TEXT, latitude TEXT, longitude TEXT);");
         } catch (Exception ex) {
             Log.i("Erro", "Criando a tabela");
         }
@@ -38,57 +37,40 @@ public class database {
         db.close();
     }
 
-    public static void addCompromisso(String descricao, String data, String hora, Activity act){
+    public static void addCidade(String nome, String latitude, String longitude, Activity act){
         openDB(act);
         try {
-            SimpleDateFormat sdfInput = new SimpleDateFormat("dd/MM/yy");
-            SimpleDateFormat sdfOutput = new SimpleDateFormat("yy/MM/dd");
-            String dataF = "";
-            try {
-                Date date = sdfInput.parse(data);
-                dataF = sdfOutput.format(date);
-            } catch (ParseException e){
-                e.printStackTrace();
-            }
-            Log.i("a", dataF);
-            db.execSQL("INSERT INTO compromissos(descricao, data, hora) VALUES('" + descricao + "','" + dataF + " ',' " + hora + "')");
+            db.execSQL("INSERT INTO cidades(nome, latitude, longitude) VALUES('" + nome + " ',' " + latitude + " ',' " + longitude + "')");
         } catch (Exception exp) {
-            Log.i("Erro", "Adicionando compromisso");
+            Log.i("Erro", "Deletando cidades");
+        }
+        closeDB();
+    }
+
+    public static void deletarCidades(Activity act){
+        openDB(act);
+        try {
+            db.execSQL("DELETE FROM cidades");
+        } catch (Exception exp) {
+            Log.i("Erro", "Deletando cidades");
         }
         closeDB();
     }
 
 
-    public static Cursor getCompromissos(Activity act, String data) {
+    public static Cursor getCidades(Activity act) {
         closeDB();
         openDB(act);
-        SimpleDateFormat sdfInput = new SimpleDateFormat("dd/MM/yy");
-        SimpleDateFormat sdfOutput = new SimpleDateFormat("yy/MM/dd");
-        String dataF = "";
-        try {
-            Date date = sdfInput.parse(data);
-            dataF = sdfOutput.format(date);
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-        Log.i("a", data + " - " + dataF);
-//        cursor= db.query( "compromissos",
-//                new String[]{"descricao", "data", "hora"},
-//                null,
-//                null,
-//                null,
-//                null,
-//                "data ASC",
-//                null
-//        );
-        cursor= db.query(
-                "compromissos",
-                new String[] {"descricao", "data", "hora"},
-                "data = ?",
-                new String[] {dataF},
+        Log.i("QueryLog", "bbb");
+        cursor= db.query( "cidades",
+                new String[]{"nome", "latitude", "longitude"},
                 null,
                 null,
-                null);
+                null,
+                null,
+                null,
+                null
+        );
         Log.i("QueryLog", "Número de registros retornados: " + cursor.getCount());
         return cursor;
     }

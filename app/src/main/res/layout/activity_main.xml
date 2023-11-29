@@ -6,113 +6,85 @@
     android:padding="15dp"
     android:layout_weight="1">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_marginTop="15dp">
+        android:text="Nome da cidade"
+        android:textSize="25dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Novo Compromisso"
-            android:textSize="25dp" />
+    <EditText
+        android:id="@+id/et_nome_da_cidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude"
+        android:textSize="25dp" />
 
-            <Button
-                android:id="@+id/bt_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Data"
-                android:textColorHint="@color/white"
-                android:onClick="mostraDialogoDatePicker"
-                android:layout_margin="1dp"
-                />
+    <EditText
+        android:id="@+id/et_lat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""/>
 
-            <Button
-                android:id="@+id/bt_hora"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="mostraDialogoTimePicker"
-                android:textColorHint="@color/white"
-                android:layout_margin="1dp"
-                android:hint="Hora" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude"
+        android:textSize="25dp" />
 
-        </LinearLayout>
+    <EditText
+        android:id="@+id/et_lon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Descrição"
-            android:textSize="25dp" />
-
-        <EditText
-            android:id="@+id/et_descricao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=""/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <Button
-            android:id="@+id/bt_ok"
+            android:id="@+id/bt_add_cidade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="OK"
+            android:hint="Adicionar Cidade"
             android:textColorHint="@color/white"
-            android:onClick="ok"/>
+            android:onClick="add"
+            android:layout_weight="1"
+            android:layout_margin="1dp"/>
+
+        <Button
+            android:id="@+id/bt_delete_cidades"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Deletar Cidades"
+            android:textColorHint="@color/white"
+            android:onClick="deletarCidades"
+            android:layout_weight="1"
+            android:layout_margin="1dp"/>
+
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_consulta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:textSize="16dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="145dp">-->
 
-            <Button
-                android:id="@+id/bt_hoje"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Hoje"
-                android:layout_margin="1dp"
-                android:textColorHint="@color/white"/>
+<!--        <TextView-->
+<!--            android:id="@+id/tv_consulta"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="25dp" />-->
 
-            <Button
-                android:id="@+id/bt_outra_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Outra Data"
-                android:onClick="mostraDialogoDatePicker"
-                android:layout_margin="1dp"
-                android:textColorHint="@color/white"/>
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="145dp">
-
-            <TextView
-                android:id="@+id/tv_consulta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp" />
-
-        </ScrollView>
-    </LinearLayout>
-
+<!--    </ScrollView>-->
 </LinearLayout>
